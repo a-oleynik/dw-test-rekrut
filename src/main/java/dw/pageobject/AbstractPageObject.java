@@ -1,0 +1,228 @@
+package dw.pageobject;
+
+import dw.UITestBase;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+public class AbstractPageObject extends UITestBase {
+
+    public static String SPINNER = "//div[@class='spinner-overlay' or @class='loading-indicator' or @data-ng-if='saveGraph.loading$ | async:this'][not(@disabled)]";
+
+
+    public void click(String xpath) {
+        findElementByXpath(xpath, 1).click();
+    }
+
+    public void actionClick(WebElement element) {
+        Actions act = new Actions(driver);
+        act.click(element).build().perform();
+    }
+
+    public void actionFillInput(WebElement element, String text) {
+        Actions act = new Actions(driver);
+        act.sendKeys(element, text).build().perform();
+    }
+
+    public void click(WebElement el) {
+        el.click();
+    }
+
+    public WebElement findElementBy(By by) {
+        return driver.findElement(by);
+    }
+
+    public List<WebElement> findElementsBy(By by) {
+        return driver.findElements(by);
+    }
+
+    public WebElement findElementBy(By by, int waitSec) {
+        implicitlyWait(waitSec, TimeUnit.SECONDS);
+        WebElement element = findElementBy(by);
+        implicitlyWait(2, TimeUnit.SECONDS);
+        return element;
+    }
+
+    public List<WebElement> findElementsBy(By by, int waitSec) {
+        implicitlyWait(waitSec, TimeUnit.SECONDS);
+        List<WebElement> elements = findElementsBy(by);
+        implicitlyWait(2, TimeUnit.SECONDS);
+        return elements;
+    }
+
+    public WebElement findElementByXpath(String xpath) {
+        return findElementBy(By.xpath(xpath));
+    }
+
+    public WebElement findElementByXpath(String xpath, int waitSec) {
+        return findElementBy(By.xpath(xpath), waitSec);
+    }
+
+    public WebElement findElementByCssSelector(String cssSelector) {
+        return findElementBy(By.cssSelector(cssSelector));
+    }
+
+    public WebElement findElementByXpath(WebElement el, String xpath) {
+        return el.findElement(By.xpath(xpath));
+    }
+
+    public WebElement findElementByXpath(WebElement el, String xpath, int waitSec) {
+        WebElement element = null;
+        try {
+            implicitlyWait(waitSec, TimeUnit.SECONDS);
+            element = el.findElement(By.xpath(xpath));
+            implicitlyWait(30, TimeUnit.SECONDS);
+        } catch (WebDriverException e) {
+
+        }
+        return element;
+    }
+
+    public List<WebElement> findElementsByXpath(String xpath) {
+        return findElementsBy(By.xpath(xpath));
+    }
+
+    public boolean isElementDisplayed(By locator, int maxWaitSec) {
+        WebDriverWait wait = new WebDriverWait(driver, maxWaitSec);
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        } catch (TimeoutException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isElementDisplayed(String xpath, int maxWaitSec) {
+        WebDriverWait wait = new WebDriverWait(driver, maxWaitSec);
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
+        } catch (TimeoutException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public void implicitlyWait(int sec, TimeUnit timeUnit) {
+        driver.manage().timeouts().implicitlyWait(sec, timeUnit);
+    }
+
+    public void clickElement(By by) {
+        findElementBy(by).click();
+    }
+
+    public void fillInputByChar(By by, String text) {
+        clickElement(by);
+        Wait.staticWait(0.5);
+        findElementBy(by, 10).clear();
+
+        for (int i = 0; i < text.length(); i++) {
+            findElementBy(by).sendKeys(String.valueOf(text.toCharArray()[i]));
+        }
+    }
+
+    public void fillInputByChar(String xpath, String text) {
+        fillInputByChar(By.xpath(xpath), text);
+    }
+
+    public void fillInputByChar(WebElement element, String text) {
+        click(element);
+        Wait.staticWait(0.5);
+        element.clear();
+
+        for (int i = 0; i < text.length(); i++) {
+            element.sendKeys(String.valueOf(text.toCharArray()[i]));
+        }
+    }
+
+
+    public void fillInput(String xpath, String text) {
+        WebElement element = findElementByXpath(xpath);
+        element.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));     // clear input
+        Actions actions = new Actions(driver);
+        actions.click(element)
+                .sendKeys(element, text)
+                .build().perform();
+    }
+
+
+    public void openUrl(String url) {
+        driver.get(url);
+    }
+
+
+    public void selectByValue(String selectXpth, String value) {
+        WebElement selectElement = findElementByXpath(selectXpth);
+        Select select = new Select(selectElement);
+        select.selectByValue(value);
+    }
+
+
+    public String getSelectedValue(String selectXpth) {
+        WebElement selectElement = findElementByXpath(selectXpth);
+        Select select = new Select(selectElement);
+        return select.getFirstSelectedOption().getText();
+    }
+
+
+    public void selectByVisibleText(String selectXpth, String value) {
+        WebElement selectElement = findElementByXpath(selectXpth);
+        Select select = new Select(selectElement);
+        select.selectByVisibleText(value);
+    }
+
+
+    public void selectByVisibleText(WebElement selectElement, String value) {
+        Select select = new Select(selectElement);
+        select.selectByVisibleText(value);
+    }
+
+
+    public boolean waitForElementDisplayed(String xpath, int maxSeconds) {
+
+        boolean isDisplayed = false;
+        for (int sec = 0; sec < maxSeconds; sec++) {
+            try {
+                if (isElementDisplayed(By.xpath(xpath), 1)) {
+                    isDisplayed = true;
+                    break;
+                } else {
+                    Wait.staticWait(1);
+                }
+            } catch (Exception e) {
+                Wait.staticWait(1);
+            }
+        }
+
+        return isDisplayed;
+    }
+
+    public boolean waitForElementNotDisplayed(String xpath, int maxSeconds) {
+        boolean isNotDisplayed = false;
+
+        for (int sec = 0; sec < maxSeconds; sec++) {
+            try {
+                if (!isElementDisplayed(By.xpath(xpath), 1)) {
+                    isNotDisplayed = true;
+                    break;
+                } else {
+                    Wait.staticWait(1);
+                }
+            } catch (Exception e) {
+                Wait.staticWait(1);
+            }
+
+        }
+        return isNotDisplayed;
+    }
+
+    public void waitForSpinnerFinish(int waitTime) {
+        if (waitForElementDisplayed(SPINNER, 2)) {
+            waitForElementNotDisplayed(SPINNER, waitTime);
+        }
+    }
+}

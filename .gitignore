@@ -1,0 +1,10 @@
+*.iml
+*.iws
+.idea/*
+target
+*debug.log
+*datawalk-cli.log
+*hs_err*.log
+*.pyc
+*.hg
+.venv
