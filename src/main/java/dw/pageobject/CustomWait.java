@@ -1,6 +1,6 @@
 package dw.pageobject;
 
-public class Wait {
+public class CustomWait {
 
 
     /**

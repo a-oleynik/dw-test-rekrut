@@ -1,9 +1,6 @@
 package dw.pageobject;
 
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 
 import java.util.ArrayList;
@@ -20,7 +17,7 @@ public class TabularViewPage extends AbstractPageObject {
     public static String PANEL_REFRESH_BUTTON_SELECTOR = "//button[@data-ng-click='panel.refresh()']";
 
     public TabularViewPage() {
-        Wait.staticWait(5);
+        CustomWait.staticWait(5);
     }
 
     public String getFirstRowColumnData(String colName) {
@@ -41,7 +38,7 @@ public class TabularViewPage extends AbstractPageObject {
                 break;
             } catch (StaleElementReferenceException e) {
                 x++;
-                Wait.staticWait(0.5);
+                CustomWait.staticWait(0.5);
             }
         }
     }
@@ -72,14 +69,13 @@ public class TabularViewPage extends AbstractPageObject {
 
     public TabularViewPage selectAllRowsOnCurrentPage() {
         click(TABULAR_PAGE + "//span[@ref='cbSelectAll']");
-        Wait.staticWait(0.5);
+        CustomWait.staticWait(0.5);
         return this;
     }
 
     public TabularViewPage goToLastPage() {
         click(PAGINATION_LAST);
-        waitForElementDisplayed(SPINNER, 2);
-        waitForElementNotDisplayed(SPINNER, 30);
+        waitForSpinnerFinish(30);//TODO: decrease time
         return this;
     }
 
@@ -87,16 +83,17 @@ public class TabularViewPage extends AbstractPageObject {
         List<WebElement> allAggregatesElements = findElementsByXpath("//ul[@class='ag-dropdown dropdown-menu aggregates'][contains(@style,'display')]//li//input");
         allAggregatesElements.forEach(el -> {
             click(el);
-            Wait.staticWait(0.3);
+            CustomWait.staticWait(0.3);
 
         });
         click("//ul[@class='ag-dropdown dropdown-menu aggregates'][contains(@style,'display')]/button");
-        waitForElementDisplayed("//div[@class='spinner-md']", 1);
-        waitForElementNotDisplayed("//div[@class='spinner-md']", 10);
+        //TODO: check if same spinner
+        waitForElementDisplayed(By.xpath("//div[@class='spinner-md']"), 1);
+        waitForElementNotDisplayed(By.xpath("//div[@class='spinner-md']"), 10);
     }
 
     public String getColumnNames() {
-        waitForElementNotDisplayed(SPINNER, 10);
+        waitForElementNotDisplayed(By.xpath(SPINNER), 10);
 
         // check if data are displayed
         List<WebElement> allColumnsData = findElementsByXpath("//div[@class='ag-header-cell-label']");
@@ -124,8 +121,7 @@ public class TabularViewPage extends AbstractPageObject {
 
     public TabularViewPage refreshTabularPage() {
         click(PANEL_REFRESH_BUTTON_SELECTOR);
-        waitForElementDisplayed(SPINNER, 2);
-        waitForElementNotDisplayed(SPINNER, 30);
+        waitForSpinnerFinish(30); //TODO:decrease time
         return this;
     }
 
@@ -187,7 +183,7 @@ public class TabularViewPage extends AbstractPageObject {
 
     private TabularViewPage openAggregatesForColumn(String columnName) {
         jsClick("//div[@class='ag-floating-bottom-viewport']//div[@colid='" + getColumnNameId(columnName) + "']//button/i");
-        Wait.staticWait(1);
+        CustomWait.staticWait(1);
         return this;
     }
 }

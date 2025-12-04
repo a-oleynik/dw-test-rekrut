@@ -2,6 +2,8 @@ package dw.pageobject;
 
 import org.openqa.selenium.By;
 
+import java.time.Duration;
+
 public class LoginPage extends AbstractPageObject {
 
     public static final String CSS_FIELD_USERNAME = "[data-testing-id='user-input']";
@@ -22,13 +24,11 @@ public class LoginPage extends AbstractPageObject {
         click(findElementByCssSelector(CSS_BUTTON_LOGIN));
     }
 
-    public void logOn(String loginPage, String user, String pwd) throws InterruptedException {
+    public void logOn(String loginPage, String user, String pwd) {
 
         openUrl(loginPage);
 
-        waitForElementDisplayed(CSS_BUTTON_LOGIN, 30);
-        //TODO: to remove thread sleep
-        Thread.sleep(1000);
+        waitForElementDisplayed(By.cssSelector(CSS_BUTTON_LOGIN), 30);
         typeUsername(user);
         typePassword(pwd);
         clickToLogin();

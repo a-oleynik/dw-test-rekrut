@@ -11,6 +11,9 @@ Switched to Java 21. TODO to ask what Java is supported.
 10. Update AbstractPageObject: update isElementDisplayed, removed public void implicitlyWait(int sec, TimeUnit timeUnit)
 11. Add @Test annotation to checkMaxValueForIntegerColumn test
 12. Fix locators on LoginPage
+13. Removed throws InterruptedException.
+14. Fix work with spinner.
+15. Update waiters
 
 
 

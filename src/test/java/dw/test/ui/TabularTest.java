@@ -7,6 +7,8 @@ import dw.pageobject.TabularViewPage;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import static dw.framework.config.Constants.LOGIN;
+import static dw.framework.config.Constants.PASSWORD;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Test
@@ -15,7 +17,7 @@ public class TabularTest extends UITestBase {
     private TabularViewPage tabularViewPage;
 
     @BeforeClass
-    public void login() throws InterruptedException {
+    public void login() {
         startApp();
     }
 
@@ -27,7 +29,7 @@ public class TabularTest extends UITestBase {
                 .isEqualTo("33");
     }
 
-    @Test(dependsOnMethods = "checkMaxValueForIntegerColumn")
+    @Test(/*dependsOnMethods = "checkMaxValueForIntegerColumn"*/)
     public void compareMaxWithSortedColumn() {
         String maxValueForSortedColumn = "sort by desc";
         String maxValueForColumnInAggregates = "something temporary"; //TODO: to implement this
@@ -37,9 +39,9 @@ public class TabularTest extends UITestBase {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    private void startApp() throws InterruptedException {
+    private void startApp() {
         LoginPage loginPage = new LoginPage();
-        loginPage.logOn(UI_URL, "demo1", "%4UQ4aX@nMLq&Vsv#Vp@%v3%4yc9@WXj");
+        loginPage.logOn(UI_URL, LOGIN, PASSWORD);
         tabularViewPage = new TabularViewPage();
     }
 }

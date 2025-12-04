@@ -3,9 +3,7 @@ package dw.pageobject;
 import dw.UITestBase;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
 
 import java.time.Duration;
 import java.util.List;
@@ -107,7 +105,6 @@ public class AbstractPageObject extends UITestBase {
 
     public void fillInputByChar(By by, String text) {
         clickElement(by);
-        Wait.staticWait(0.5);
         findElementBy(by, 10).clear();
 
         for (int i = 0; i < text.length(); i++) {
@@ -121,7 +118,6 @@ public class AbstractPageObject extends UITestBase {
 
     public void fillInputByChar(WebElement element, String text) {
         click(element);
-        Wait.staticWait(0.5);
         element.clear();
 
         for (int i = 0; i < text.length(); i++) {
@@ -171,48 +167,33 @@ public class AbstractPageObject extends UITestBase {
         select.selectByVisibleText(value);
     }
 
-
-    public boolean waitForElementDisplayed(String xpath, int maxSeconds) {
-
-        boolean isDisplayed = false;
-        for (int sec = 0; sec < maxSeconds; sec++) {
-            try {
-                if (isElementDisplayed(By.xpath(xpath), 1)) {
-                    isDisplayed = true;
-                    break;
-                } else {
-                    Wait.staticWait(1);
-                }
-            } catch (Exception e) {
-                Wait.staticWait(1);
-            }
+    public boolean waitForElementDisplayed(By by, int maxSeconds) {
+        try {
+            Wait<WebDriver> wait = new FluentWait<>(driver)
+                    .withTimeout(Duration.ofSeconds(maxSeconds))
+                    .pollingEvery(Duration.ofMillis(200))
+                    .ignoring(NoSuchElementException.class);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+            return true;
+        } catch (TimeoutException e) {
+            return false;  // element never appeared (acceptable)
         }
-
-        return isDisplayed;
     }
 
-    public boolean waitForElementNotDisplayed(String xpath, int maxSeconds) {
-        boolean isNotDisplayed = false;
-
-        for (int sec = 0; sec < maxSeconds; sec++) {
-            try {
-                if (!isElementDisplayed(By.xpath(xpath), 1)) {
-                    isNotDisplayed = true;
-                    break;
-                } else {
-                    Wait.staticWait(1);
-                }
-            } catch (Exception e) {
-                Wait.staticWait(1);
-            }
-
+    public boolean waitForElementNotDisplayed(By by, int maxSeconds) {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(maxSeconds));
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
+            return true;
         }
-        return isNotDisplayed;
+        catch (TimeoutException e){
+            return false;
+        }
     }
 
     public void waitForSpinnerFinish(int waitTime) {
-        if (waitForElementDisplayed(SPINNER, 2)) {
-            waitForElementNotDisplayed(SPINNER, waitTime);
+        if (waitForElementDisplayed(By.xpath(SPINNER), 2)) {
+            waitForElementNotDisplayed(By.xpath(SPINNER), waitTime);
         }
     }
 }
