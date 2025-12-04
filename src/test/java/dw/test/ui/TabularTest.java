@@ -19,6 +19,7 @@ public class TabularTest extends UITestBase {
         startApp();
     }
 
+    @Test
     public void checkMaxValueForIntegerColumn() {
         String maxValueForColumnInAggregates = tabularViewPage.getAggregateValueForColumn("Victim Age", AggregateOption.MAX);
         assertThat(maxValueForColumnInAggregates)
@@ -29,6 +30,7 @@ public class TabularTest extends UITestBase {
     @Test(dependsOnMethods = "checkMaxValueForIntegerColumn")
     public void compareMaxWithSortedColumn() {
         String maxValueForSortedColumn = "sort by desc";
+        String maxValueForColumnInAggregates = "something temporary"; //TODO: to implement this
         assertThat(maxValueForSortedColumn)
                 .describedAs("Aggregate max value for: ABC is different than displayed in tabular.")
                 .isEqualTo(maxValueForColumnInAggregates);

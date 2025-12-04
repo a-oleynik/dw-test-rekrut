@@ -8,6 +8,7 @@ import org.testng.annotations.BeforeClass;
 
 import java.util.Map;
 
+import static dw.framework.config.Constants.BASE_URL;
 import static io.restassured.RestAssured.given;
 import static org.testng.Assert.fail;
 
@@ -47,7 +48,7 @@ public class RestTestBase extends TestBase {
                 .log().all()
                 .header(XSRF_HEADER_NAME, XSRF_HEADER_VALUE)
                 .cookie(XSRF_COOKIE_NAME, XSRF_COOKIE_VALUE)
-                .baseUri("https://" + DW_HOST)
+                .baseUri(BASE_URL)
                 .and();
     }
 }

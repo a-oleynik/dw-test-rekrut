@@ -7,8 +7,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class AbstractPageObject extends UITestBase {
 
@@ -42,16 +42,12 @@ public class AbstractPageObject extends UITestBase {
     }
 
     public WebElement findElementBy(By by, int waitSec) {
-        implicitlyWait(waitSec, TimeUnit.SECONDS);
         WebElement element = findElementBy(by);
-        implicitlyWait(2, TimeUnit.SECONDS);
         return element;
     }
 
     public List<WebElement> findElementsBy(By by, int waitSec) {
-        implicitlyWait(waitSec, TimeUnit.SECONDS);
         List<WebElement> elements = findElementsBy(by);
-        implicitlyWait(2, TimeUnit.SECONDS);
         return elements;
     }
 
@@ -74,9 +70,7 @@ public class AbstractPageObject extends UITestBase {
     public WebElement findElementByXpath(WebElement el, String xpath, int waitSec) {
         WebElement element = null;
         try {
-            implicitlyWait(waitSec, TimeUnit.SECONDS);
             element = el.findElement(By.xpath(xpath));
-            implicitlyWait(30, TimeUnit.SECONDS);
         } catch (WebDriverException e) {
 
         }
@@ -88,7 +82,7 @@ public class AbstractPageObject extends UITestBase {
     }
 
     public boolean isElementDisplayed(By locator, int maxWaitSec) {
-        WebDriverWait wait = new WebDriverWait(driver, maxWaitSec);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(maxWaitSec));
         try {
             wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
         } catch (TimeoutException e) {
@@ -98,17 +92,13 @@ public class AbstractPageObject extends UITestBase {
     }
 
     public boolean isElementDisplayed(String xpath, int maxWaitSec) {
-        WebDriverWait wait = new WebDriverWait(driver, maxWaitSec);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(maxWaitSec));
         try {
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
         } catch (TimeoutException e) {
             return false;
         }
         return true;
-    }
-
-    public void implicitlyWait(int sec, TimeUnit timeUnit) {
-        driver.manage().timeouts().implicitlyWait(sec, timeUnit);
     }
 
     public void clickElement(By by) {
