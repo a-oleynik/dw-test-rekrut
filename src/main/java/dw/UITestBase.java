@@ -17,9 +17,9 @@ public class UITestBase extends TestBase {
         //System.setProperty("webdriver.chrome.driver", "");
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));//TODO: to decrease
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(10));//TODO: to decrease
-        driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(10));//TODO: to decrease
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));//TODO: to decrease
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));//TODO: to decrease
+        driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(20));//TODO: to decrease
     }
 
     @AfterClass(alwaysRun = true)

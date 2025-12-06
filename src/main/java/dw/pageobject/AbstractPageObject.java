@@ -141,22 +141,22 @@ public class AbstractPageObject extends UITestBase {
     }
 
 
-    public void selectByValue(String selectXpth, String value) {
-        WebElement selectElement = findElementByXpath(selectXpth);
+    public void selectByValue(String selectXpath, String value) {
+        WebElement selectElement = findElementByXpath(selectXpath);
         Select select = new Select(selectElement);
         select.selectByValue(value);
     }
 
 
-    public String getSelectedValue(String selectXpth) {
-        WebElement selectElement = findElementByXpath(selectXpth);
+    public String getSelectedValue(String selectXpath) {
+        WebElement selectElement = findElementByXpath(selectXpath);
         Select select = new Select(selectElement);
         return select.getFirstSelectedOption().getText();
     }
 
 
-    public void selectByVisibleText(String selectXpth, String value) {
-        WebElement selectElement = findElementByXpath(selectXpth);
+    public void selectByVisibleText(String selectXpath, String value) {
+        WebElement selectElement = findElementByXpath(selectXpath);
         Select select = new Select(selectElement);
         select.selectByVisibleText(value);
     }

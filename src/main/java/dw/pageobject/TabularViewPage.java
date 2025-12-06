@@ -15,6 +15,8 @@ public class TabularViewPage extends AbstractPageObject {
     public static String FILTER_INSERT_INPUTS = "//div[@class='ag-filter']//div[contains(@class,'filter') and not(contains(@class,'hidden')) or not(@class)]/input[@class='ag-filter-filter']";
     public static String FILTER_CONFIRMATION_BUTTON = "//button[@id='applyButton']";
     public static String PANEL_REFRESH_BUTTON_SELECTOR = "//button[@data-ng-click='panel.refresh()']";
+    public static String XPATH_OK_AGGREGATE_BUTTON = "//ul[@class='ag-dropdown dropdown-menu aggregates'][contains(@style,'display')]/button";
+    public static String XPATH_TABULAR_VIEW_PAGE_SPINNER = "//div[@class='spinner-md']";
 
     public TabularViewPage() {
         CustomWait.staticWait(5);
@@ -83,13 +85,11 @@ public class TabularViewPage extends AbstractPageObject {
         List<WebElement> allAggregatesElements = findElementsByXpath("//ul[@class='ag-dropdown dropdown-menu aggregates'][contains(@style,'display')]//li//input");
         allAggregatesElements.forEach(el -> {
             click(el);
-            CustomWait.staticWait(0.3);
-
         });
-        click("//ul[@class='ag-dropdown dropdown-menu aggregates'][contains(@style,'display')]/button");
-        //TODO: check if same spinner
-        waitForElementDisplayed(By.xpath("//div[@class='spinner-md']"), 1);
-        waitForElementNotDisplayed(By.xpath("//div[@class='spinner-md']"), 10);
+        click(XPATH_OK_AGGREGATE_BUTTON);
+        // TODO: add spinner method
+        waitForElementDisplayed(By.xpath(XPATH_TABULAR_VIEW_PAGE_SPINNER), 1);
+        waitForElementNotDisplayed(By.xpath(XPATH_TABULAR_VIEW_PAGE_SPINNER), 10);
     }
 
     public String getColumnNames() {
@@ -167,7 +167,7 @@ public class TabularViewPage extends AbstractPageObject {
 
     public String getAggregateValueForColumn(String colName, AggregateOption option) {
         String value = "";
-        String aggregateCell = "//span[@class='ag-floating-bottom-viewport']//div[@colid='" + getColumnNameId(colName) + "']" +
+        String aggregateCell = "//div[@colid='" + getColumnNameId(colName) + "']" +
                 "//div[@class='aggregates']/h6[contains(text(),'" + option.name() + "')]";
         if (isElementDisplayed(aggregateCell, 1)) {
             value = findElementByXpath(findElementByXpath(aggregateCell, 1), "./small", 1).getText();

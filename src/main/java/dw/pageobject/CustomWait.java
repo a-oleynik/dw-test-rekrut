@@ -8,6 +8,7 @@ public class CustomWait {
      *
      * @param sec to wait
      */
+    @Deprecated
     public static void staticWait(int sec) {
         System.out.println("Wait seconds: " + sec);
         long t0, t1;
@@ -24,6 +25,7 @@ public class CustomWait {
      *
      * @param sec to wait
      */
+    @Deprecated
     public static void staticWait(double sec) {
         long t0, t1;
 

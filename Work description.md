@@ -14,6 +14,13 @@ Switched to Java 21. TODO to ask what Java is supported.
 13. Removed throws InterruptedException.
 14. Fix work with spinner.
 15. Update waiters
+16. Add active session modal handler
+17. Fix locators for aggregate function elements
+18. Removed CustomWait.staticWait from setAllAggregatesForColumn()
+16. Fix checkMaxValueForIntegerColumn
+17. Marked CustomWait methods as @Deprecated
+18. Correct misspelled selectXpath
+19. Fix general timeouts (increased to 20 seconds)
 
 
 

@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TabularTest extends UITestBase {
 
     private TabularViewPage tabularViewPage;
+    private static final String COLUMN_TO_TEST = "Latitude";
 
     @BeforeClass
     public void login() {
@@ -23,16 +24,16 @@ public class TabularTest extends UITestBase {
 
     @Test
     public void checkMaxValueForIntegerColumn() {
-        String maxValueForColumnInAggregates = tabularViewPage.getAggregateValueForColumn("Victim Age", AggregateOption.MAX);
+        String maxValueForColumnInAggregates = tabularViewPage.getAggregateValueForColumn(COLUMN_TO_TEST, AggregateOption.MAX);
         assertThat(maxValueForColumnInAggregates)
                 .describedAs("Aggregate max value for: ABC is different than displayed in tabular.")
-                .isEqualTo("33");
+                .isEqualTo("59.38");
     }
 
     @Test(/*dependsOnMethods = "checkMaxValueForIntegerColumn"*/)
     public void compareMaxWithSortedColumn() {
         String maxValueForSortedColumn = "sort by desc";
-        String maxValueForColumnInAggregates = "something temporary"; //TODO: to implement this
+        String maxValueForColumnInAggregates = tabularViewPage.getAggregateValueForColumn(COLUMN_TO_TEST, AggregateOption.MAX);
         assertThat(maxValueForSortedColumn)
                 .describedAs("Aggregate max value for: ABC is different than displayed in tabular.")
                 .isEqualTo(maxValueForColumnInAggregates);
@@ -42,6 +43,9 @@ public class TabularTest extends UITestBase {
     private void startApp() {
         LoginPage loginPage = new LoginPage();
         loginPage.logOn(UI_URL, LOGIN, PASSWORD);
+        if (loginPage.isActiveSession()){
+            loginPage.logOnInActiveSession(LOGIN, PASSWORD);
+        }
         tabularViewPage = new TabularViewPage();
     }
 }
