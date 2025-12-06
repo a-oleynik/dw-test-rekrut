@@ -17,9 +17,12 @@ public class TabularViewPage extends AbstractPageObject {
     public static String PANEL_REFRESH_BUTTON_SELECTOR = "//button[@data-ng-click='panel.refresh()']";
     public static String XPATH_OK_AGGREGATE_BUTTON = "//ul[@class='ag-dropdown dropdown-menu aggregates'][contains(@style,'display')]/button";
     public static String XPATH_TABULAR_VIEW_PAGE_SPINNER = "//div[@class='spinner-md']";
+    public static String XPATH_TABLE_NAME = "//table//*[contains(@class, 'tab-table')]";
+    public static String XPATH_ALL_COLUMNS_BUTTON = "//datawalk-chip/span";
 
     public TabularViewPage() {
-        CustomWait.staticWait(5);
+        waitForElementDisplayed(By.xpath(XPATH_TABLE_NAME), 5);
+        waitForElementDisplayed(By.xpath(XPATH_ALL_COLUMNS_BUTTON), 5);
     }
 
     public String getFirstRowColumnData(String colName) {
