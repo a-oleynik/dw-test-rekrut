@@ -26,6 +26,10 @@ public class TabularViewPage extends AbstractPageObject {
     private static final String XPATH_AGGREGATE_COLUMN_VALUE = XPATH_COLUMN_HEADER + "//div[@class='aggregates']/h6[contains(text(),'%s')]";
     private static final String XPATH_COLUMN_SORTING = XPATH_COLUMN_HEADER +
             "//span[contains(@ref,'eSort') and not(contains(@class, 'hidden')) and not(contains(@ref,'eSortOrder'))]";
+    private static final String XPATH_AGGREGATES_MENU_DROPDOWN
+            = "//ul[@class='ag-dropdown dropdown-menu aggregates'][contains(@style,'display')]";
+    private static final String XPATH_ALL_AGGREGATES_ELEMENTS = XPATH_AGGREGATES_MENU_DROPDOWN + "//li//input";
+    private static final String XPATH_SEPARATE_AGGREGATES_ELEMENTS = XPATH_AGGREGATES_MENU_DROPDOWN + "//label[contains(.,'%s')]/input";
 
     public TabularViewPage() {
         // Check if the table name of the first table and the All columns button are visible
@@ -88,19 +92,48 @@ public class TabularViewPage extends AbstractPageObject {
 
     public TabularViewPage goToLastPage() {
         click(PAGINATION_LAST);
-        waitForSpinnerFinish(30);//TODO: decrease time
+        waitForSpinnerFinish(30);
         return this;
     }
 
     private void setAllAggregatesForColumn() {
-        List<WebElement> allAggregatesElements = findElementsByXpath("//ul[@class='ag-dropdown dropdown-menu aggregates'][contains(@style,'display')]//li//input");
+        List<WebElement> allAggregatesElements = findElementsByXpath(XPATH_ALL_AGGREGATES_ELEMENTS);
         allAggregatesElements.forEach(el -> {
-            click(el);
+            if (!el.isSelected()){
+                click(el);
+            }
         });
         click(XPATH_OK_AGGREGATE_BUTTON);
-        // TODO: add spinner method
-        waitForElementDisplayed(By.xpath(XPATH_TABULAR_VIEW_PAGE_SPINNER), 1);
-        waitForElementNotDisplayed(By.xpath(XPATH_TABULAR_VIEW_PAGE_SPINNER), 10);
+        waitForElementNotDisplayed(By.xpath(XPATH_AGGREGATES_MENU_DROPDOWN), 3);
+    }
+
+    private void setAggregateForColumn(AggregateOption option) {
+        WebElement aggregateCheckbox = findElementByXpath(format(XPATH_SEPARATE_AGGREGATES_ELEMENTS, option.name()));
+        if (!aggregateCheckbox.isSelected()) {
+            click(aggregateCheckbox);
+        }
+        click(XPATH_OK_AGGREGATE_BUTTON);
+        waitForElementNotDisplayed(By.xpath(XPATH_AGGREGATES_MENU_DROPDOWN), 3);
+    }
+
+    public void cleanAggregateForColumn(AggregateOption option) {
+        WebElement aggregateCheckbox = findElementByXpath(format(XPATH_SEPARATE_AGGREGATES_ELEMENTS, option.name()));
+        if (aggregateCheckbox.isSelected()) {
+            click(aggregateCheckbox);
+        }
+        click(XPATH_OK_AGGREGATE_BUTTON);
+        waitForElementNotDisplayed(By.xpath(XPATH_AGGREGATES_MENU_DROPDOWN), 3);
+    }
+
+    public void cleanAllAggregatesForColumn() {
+        List<WebElement> allAggregatesElements = findElementsByXpath(XPATH_ALL_AGGREGATES_ELEMENTS);
+        allAggregatesElements.forEach(el -> {
+            if (el.isSelected()) {
+                click(el);
+            }
+        });
+        click(XPATH_OK_AGGREGATE_BUTTON);
+        waitForElementNotDisplayed(By.xpath(XPATH_AGGREGATES_MENU_DROPDOWN), 3);
     }
 
     public String getColumnNames() {
@@ -181,14 +214,15 @@ public class TabularViewPage extends AbstractPageObject {
     public String getAggregateValueForColumn(String colName, AggregateOption option) {
         String value = "";
         String aggregateCell = format(XPATH_AGGREGATE_COLUMN_VALUE, getColumnNameId(colName), option.name());
-                /*"//div[@colid='" + getColumnNameId(colName) + "']" +
-                "//div[@class='aggregates']/h6[contains(text(),'" + option.name() + "')]";*/
         if (isElementDisplayed(aggregateCell, 1)) {
             value = findElementByXpath(findElementByXpath(aggregateCell, 1), "./small", 1).getText();
         } else {// if not open aggregates menu
             openAggregatesForColumn(colName);
             // select all aggregates
-            setAllAggregatesForColumn();
+            setAggregateForColumn(option);
+            //TODO: we need to set only the required option but the previous variant should be checked with the available
+            // scenarios with the current team. Return the previous variant if required
+            //setAllAggregatesForColumn();
             // read value
             value = findElementByXpath(findElementByXpath(aggregateCell, 1), "./small", 1).getText();
         }
@@ -196,26 +230,25 @@ public class TabularViewPage extends AbstractPageObject {
     }
 
     public TabularViewPage sortColumn(String columnName, SortOption option) {
-        if (getColumnSorting(columnName).equals(option)){
+        if (getColumnSorting(columnName).equals(option)) {
             return this;
         }
         for (int i = 0; i < 2; i++) {
             click(format(XPATH_COLUMN_HEADER, getColumnNameId(columnName)));
-            if (getColumnSorting(columnName).equals(option)){
+            if (getColumnSorting(columnName).equals(option)) {
                 return this;
             }
         }
         throw new RuntimeException("Cannot switch to " + option);
     }
 
-    public SortOption getColumnSorting(String columnName){
+    public SortOption getColumnSorting(String columnName) {
         String refValue = findElementByXpath(format(XPATH_COLUMN_SORTING, getColumnNameId(columnName))).getAttribute("ref");
         return SortOption.fromRef(refValue).orElse(SortOption.NONE);
     }
 
-    private TabularViewPage openAggregatesForColumn(String columnName) {
+    public TabularViewPage openAggregatesForColumn(String columnName) {
         jsClick("//div[@class='ag-floating-bottom-viewport']//div[@colid='" + getColumnNameId(columnName) + "']//button/i");
-        CustomWait.staticWait(1);
         return this;
     }
 }

@@ -142,7 +142,7 @@ public class AbstractPageObject extends UITestBase {
 
     public void scrollLeftElementByXpath(String XPath) {
         String script = format("var el = document.evaluate(\"%s\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;\n" +
-                "el.scrollLeft += 180;", XPath);
+                "el.scrollLeft += 200;", XPath);
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript(script);
     }

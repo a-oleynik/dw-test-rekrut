@@ -5,6 +5,7 @@ import dw.pageobject.AggregateOption;
 import dw.pageobject.LoginPage;
 import dw.pageobject.SortOption;
 import dw.pageobject.TabularViewPage;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -20,6 +21,8 @@ public class TabularTest extends UITestBase {
     private static final String LATITUDE_COLUMN = "Latitude";
     private static final String SERIAL_NUMBER_COLUMN = "Serial number";
     private static final String ERROR_MESSAGE = "Aggregate max value for %s is different than displayed in tabular.";
+    private String column;
+    private AggregateOption aggregateOption = AggregateOption.MAX;
 
     @BeforeClass
     public void login() {
@@ -28,7 +31,8 @@ public class TabularTest extends UITestBase {
 
     @Test
     public void checkMaxValueForIntegerColumn() {
-        String maxValueForColumnInAggregates = tabularViewPage.getAggregateValueForColumn(LATITUDE_COLUMN, AggregateOption.MAX);
+        column = LATITUDE_COLUMN;
+        String maxValueForColumnInAggregates = tabularViewPage.getAggregateValueForColumn(column, aggregateOption);
         assertThat(maxValueForColumnInAggregates)
                 .describedAs(format(ERROR_MESSAGE, LATITUDE_COLUMN))
                 .isEqualTo("59.38");
@@ -36,12 +40,20 @@ public class TabularTest extends UITestBase {
 
     @Test(/*dependsOnMethods = "checkMaxValueForIntegerColumn"*/)
     public void compareMaxWithSortedColumn() {
-        String maxValueForColumnInAggregates = tabularViewPage.getAggregateValueForColumn(SERIAL_NUMBER_COLUMN, AggregateOption.MAX);
-        tabularViewPage.sortColumn(SERIAL_NUMBER_COLUMN, SortOption.ASC);
-        String maxValueForSortedColumn = tabularViewPage.getAggregateValueForColumn(SERIAL_NUMBER_COLUMN, AggregateOption.MAX);
+        column = SERIAL_NUMBER_COLUMN;
+        String maxValueForColumnInAggregates = tabularViewPage.getAggregateValueForColumn(column, aggregateOption);
+        tabularViewPage.sortColumn(column, SortOption.ASC);
+        String maxValueForSortedColumn = tabularViewPage.getAggregateValueForColumn(column, aggregateOption);
         assertThat(maxValueForSortedColumn)
-                .describedAs(format(ERROR_MESSAGE, SERIAL_NUMBER_COLUMN))
+                .describedAs(format(ERROR_MESSAGE, column))
                 .isEqualTo(maxValueForColumnInAggregates);
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void cleanAggregateOption(){
+        tabularViewPage.openAggregatesForColumn(column)
+                //.cleanAllAggregatesForColumn();// We chose this variant if we checked all aggregated checkboxes
+                .cleanAggregateForColumn(aggregateOption);
     }
 
     //------------------------------------------------------------------------------------------------------------------

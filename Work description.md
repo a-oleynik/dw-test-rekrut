@@ -22,6 +22,9 @@ Switched to Java 21. TODO to ask what Java is supported.
 18. Correct misspelled selectXpath
 19. Fix general timeouts (increased to 20 seconds)
 20. Finish the test compareMaxWithSortedColumn. Add two variants of method to scroll left until visible.
+21. Clean up aggregates after tests. Added two alternative versions 
+* a) we check all the aggregates during the test and uncheck all of them after the test.
+* b) we check only the required aggregate option during the test and uncheck it after the test.
 
 
 
