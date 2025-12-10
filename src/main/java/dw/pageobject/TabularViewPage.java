@@ -10,24 +10,25 @@ import static java.lang.String.format;
 
 public class TabularViewPage extends AbstractPageObject {
 
-    public static String TABULAR_PAGE = "//div[@class='ag-table ag-datawalk']";
-    public static String TABLE_HEADER_COLUMNS = TABULAR_PAGE + "//span";
-    public static String PAGINATION_BAR = "//div[contains(@class,'ag-paging-panel')]";
-    public static String PAGINATION_LAST = PAGINATION_BAR + "//button[@ref='btLast']";
-    public static String FILTER_INSERT_INPUTS = "//div[@class='ag-filter']//div[contains(@class,'filter') and not(contains(@class,'hidden')) or not(@class)]/input[@class='ag-filter-filter']";
-    public static String FILTER_CONFIRMATION_BUTTON = "//button[@id='applyButton']";
-    public static String PANEL_REFRESH_BUTTON_SELECTOR = "//button[@data-ng-click='panel.refresh()']";
-    public static String XPATH_OK_AGGREGATE_BUTTON = "//ul[@class='ag-dropdown dropdown-menu aggregates'][contains(@style,'display')]/button";
-    public static String XPATH_TABULAR_VIEW_PAGE_SPINNER = "//div[@class='spinner-md']";
-    public static String XPATH_TABLE_NAME = "//table//*[contains(@class, 'tab-table')]";
-    public static String XPATH_ALL_COLUMNS_BUTTON = "//datawalk-chip/span";
-    public static String XPATH_SCROLL_BAR = "//div[@class='ag-body-viewport']";
-    public static final String XPATH_COLUMN_HEADER = "//div[@colid='%s']";
-    public static final String XPATH_AGGREGATE_COLUMN_VALUE = XPATH_COLUMN_HEADER + "//div[@class='aggregates']/h6[contains(text(),'%s')]";
-    public static final String XPATH_COLUMN_SORTING = XPATH_COLUMN_HEADER +
+    private static final String TABULAR_PAGE = "//div[@class='ag-table ag-datawalk']";
+    private static final String TABLE_HEADER_COLUMNS = TABULAR_PAGE + "//span";
+    private static final String PAGINATION_BAR = "//div[contains(@class,'ag-paging-panel')]";
+    private static final String PAGINATION_LAST = PAGINATION_BAR + "//button[@ref='btLast']";
+    private static final String FILTER_INSERT_INPUTS = "//div[@class='ag-filter']//div[contains(@class,'filter') and not(contains(@class,'hidden')) or not(@class)]/input[@class='ag-filter-filter']";
+    private static final String FILTER_CONFIRMATION_BUTTON = "//button[@id='applyButton']";
+    private static final String PANEL_REFRESH_BUTTON_SELECTOR = "//button[@data-ng-click='panel.refresh()']";
+    private static final String XPATH_OK_AGGREGATE_BUTTON = "//ul[@class='ag-dropdown dropdown-menu aggregates'][contains(@style,'display')]/button";
+    private static final String XPATH_TABULAR_VIEW_PAGE_SPINNER = "//div[@class='spinner-md']";
+    private static final String XPATH_TABLE_NAME = "//table//*[contains(@class, 'tab-table')]";
+    private static final String XPATH_ALL_COLUMNS_BUTTON = "//datawalk-chip/span";
+    private static final String XPATH_SCROLL_BAR = "//div[@class='ag-body-viewport']";
+    private static final String XPATH_COLUMN_HEADER = "//div[@colid='%s']";
+    private static final String XPATH_AGGREGATE_COLUMN_VALUE = XPATH_COLUMN_HEADER + "//div[@class='aggregates']/h6[contains(text(),'%s')]";
+    private static final String XPATH_COLUMN_SORTING = XPATH_COLUMN_HEADER +
             "//span[contains(@ref,'eSort') and not(contains(@class, 'hidden')) and not(contains(@ref,'eSortOrder'))]";
 
     public TabularViewPage() {
+        // Check if the table name of the first table and the All columns button are visible
         waitForElementDisplayed(By.xpath(XPATH_TABLE_NAME), 5);
         waitForElementDisplayed(By.xpath(XPATH_ALL_COLUMNS_BUTTON), 5);
     }
@@ -123,7 +124,8 @@ public class TabularViewPage extends AbstractPageObject {
     private String getColumnNameId(String columnName) {
         By by = By.xpath(TABLE_HEADER_COLUMNS + "[contains(text(),'" + columnName + "')]/ancestor::div[@colid]");
         return scrollLeftUntilElementPresent(by, XPATH_SCROLL_BAR).getAttribute("colid");
-        //return scrollLeftUntilElementPresent1(by, XPATH_SCROLL_BAR, 5).getAttribute("colid");
+        // Alternative implementation
+        //return scrollLeftUntilElementPresentV2(by, XPATH_SCROLL_BAR, 5).getAttribute("colid");
     }
 
     private WebElement getColumnFilterDropdown(String columnName) {
@@ -132,7 +134,7 @@ public class TabularViewPage extends AbstractPageObject {
 
     public TabularViewPage refreshTabularPage() {
         click(PANEL_REFRESH_BUTTON_SELECTOR);
-        waitForSpinnerFinish(30); //TODO:decrease time
+        waitForSpinnerFinish(30);
         return this;
     }
 
