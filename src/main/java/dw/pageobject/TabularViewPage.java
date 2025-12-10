@@ -6,6 +6,8 @@ import org.openqa.selenium.interactions.Actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.String.format;
+
 public class TabularViewPage extends AbstractPageObject {
 
     public static String TABULAR_PAGE = "//div[@class='ag-table ag-datawalk']";
@@ -19,6 +21,11 @@ public class TabularViewPage extends AbstractPageObject {
     public static String XPATH_TABULAR_VIEW_PAGE_SPINNER = "//div[@class='spinner-md']";
     public static String XPATH_TABLE_NAME = "//table//*[contains(@class, 'tab-table')]";
     public static String XPATH_ALL_COLUMNS_BUTTON = "//datawalk-chip/span";
+    public static String XPATH_SCROLL_BAR = "//div[@class='ag-body-viewport']";
+    public static final String XPATH_COLUMN_HEADER = "//div[@colid='%s']";
+    public static final String XPATH_AGGREGATE_COLUMN_VALUE = XPATH_COLUMN_HEADER + "//div[@class='aggregates']/h6[contains(text(),'%s')]";
+    public static final String XPATH_COLUMN_SORTING = XPATH_COLUMN_HEADER +
+            "//span[contains(@ref,'eSort') and not(contains(@class, 'hidden')) and not(contains(@ref,'eSortOrder'))]";
 
     public TabularViewPage() {
         waitForElementDisplayed(By.xpath(XPATH_TABLE_NAME), 5);
@@ -114,8 +121,9 @@ public class TabularViewPage extends AbstractPageObject {
     }
 
     private String getColumnNameId(String columnName) {
-        return findElementByXpath(TABLE_HEADER_COLUMNS + "[contains(text(),'" + columnName + "')]/ancestor::div[@colid]")
-                .getAttribute("colid");
+        By by = By.xpath(TABLE_HEADER_COLUMNS + "[contains(text(),'" + columnName + "')]/ancestor::div[@colid]");
+        return scrollLeftUntilElementPresent(by, XPATH_SCROLL_BAR).getAttribute("colid");
+        //return scrollLeftUntilElementPresent1(by, XPATH_SCROLL_BAR, 5).getAttribute("colid");
     }
 
     private WebElement getColumnFilterDropdown(String columnName) {
@@ -170,8 +178,9 @@ public class TabularViewPage extends AbstractPageObject {
 
     public String getAggregateValueForColumn(String colName, AggregateOption option) {
         String value = "";
-        String aggregateCell = "//div[@colid='" + getColumnNameId(colName) + "']" +
-                "//div[@class='aggregates']/h6[contains(text(),'" + option.name() + "')]";
+        String aggregateCell = format(XPATH_AGGREGATE_COLUMN_VALUE, getColumnNameId(colName), option.name());
+                /*"//div[@colid='" + getColumnNameId(colName) + "']" +
+                "//div[@class='aggregates']/h6[contains(text(),'" + option.name() + "')]";*/
         if (isElementDisplayed(aggregateCell, 1)) {
             value = findElementByXpath(findElementByXpath(aggregateCell, 1), "./small", 1).getText();
         } else {// if not open aggregates menu
@@ -182,6 +191,24 @@ public class TabularViewPage extends AbstractPageObject {
             value = findElementByXpath(findElementByXpath(aggregateCell, 1), "./small", 1).getText();
         }
         return value;
+    }
+
+    public TabularViewPage sortColumn(String columnName, SortOption option) {
+        if (getColumnSorting(columnName).equals(option)){
+            return this;
+        }
+        for (int i = 0; i < 2; i++) {
+            click(format(XPATH_COLUMN_HEADER, getColumnNameId(columnName)));
+            if (getColumnSorting(columnName).equals(option)){
+                return this;
+            }
+        }
+        throw new RuntimeException("Cannot switch to " + option);
+    }
+
+    public SortOption getColumnSorting(String columnName){
+        String refValue = findElementByXpath(format(XPATH_COLUMN_SORTING, getColumnNameId(columnName))).getAttribute("ref");
+        return SortOption.fromRef(refValue).orElse(SortOption.NONE);
     }
 
     private TabularViewPage openAggregatesForColumn(String columnName) {

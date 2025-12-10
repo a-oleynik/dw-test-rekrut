@@ -21,6 +21,7 @@ Switched to Java 21. TODO to ask what Java is supported.
 17. Marked CustomWait methods as @Deprecated
 18. Correct misspelled selectXpath
 19. Fix general timeouts (increased to 20 seconds)
+20. Finish the test compareMaxWithSortedColumn. Add two variants of method to scroll left until visible.
 
 
 
