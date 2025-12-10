@@ -1,10 +1,9 @@
 package dw.framework.config;
 
+import static dw.framework.config.ConfigurationManager.configuration;
+
 public class Constants {
-    //TODO: to move to the properties
-    public static final String BASE_URL = "https://dw-task2-oci.demo-datawalk.com";
-    //TODO: to move to the properties
-    public static final String LOGIN = "demo2";
-    //TODO: to move to the properties
-    public static final String PASSWORD = "TDF$hSj6zFHN8XEtnp4@^Md^S3Cht4at1";
+    public static final String BASE_URL = configuration().baseUrl();
+    public static final String LOGIN = configuration().username();
+    public static final String PASSWORD = configuration().password();
 }

@@ -19,25 +19,25 @@ public class LoginPage extends AbstractPageObject {
         return this;
     }
 
-    public void clickToLogin() {
+    public void clickLogin() {
         click(findElementByCssSelector(CSS_BUTTON_LOGIN));
     }
 
-    public void logOn(String loginPage, String user, String pwd) {
+    public void logOn(String loginPage, String user, String password) {
 
         openUrl(loginPage);
 
         waitForElementDisplayed(By.cssSelector(CSS_BUTTON_LOGIN), 30);
         typeUsername(user);
-        typePassword(pwd);
-        clickToLogin();
+        typePassword(password);
+        clickLogin();
     }
 
-    public void logOnInActiveSession(String user, String pwd) {
-        clickToLogin();
+    public void logOnInActiveSession(String password) {
+        clickLogin();
         waitForElementDisplayed(By.cssSelector(CSS_FIELD_PASSWORD), 10);
-        typePassword(pwd);
-        clickToLogin();
+        typePassword(password);
+        clickLogin();
     }
 
     public boolean isActiveSession(){

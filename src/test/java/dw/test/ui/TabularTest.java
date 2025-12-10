@@ -61,7 +61,7 @@ public class TabularTest extends UITestBase {
         LoginPage loginPage = new LoginPage();
         loginPage.logOn(UI_URL, LOGIN, PASSWORD);
         if (loginPage.isActiveSession()) {
-            loginPage.logOnInActiveSession(LOGIN, PASSWORD);
+            loginPage.logOnInActiveSession(PASSWORD);
         }
         tabularViewPage = new TabularViewPage();
     }
