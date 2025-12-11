@@ -33,5 +33,6 @@ Switched to Java 21. TODO to ask what Java is supported.
 27. Add Session model for api request session.
 28. Fix checkMaxValueForIntegerColumn to send correct request.
 29. Implement response parsing for checkMaxValueForIntegerColumn test.
+30. Added skeleton of test classes, methods and utils to test with XLSX export.
 
 
