@@ -9,7 +9,7 @@ import org.testng.annotations.BeforeClass;
 
 import java.util.Map;
 
-import static dw.framework.config.Constants.BASE_URL;
+import static dw.framework.config.Constants.*;
 import static io.restassured.RestAssured.given;
 import static org.testng.Assert.fail;
 
@@ -24,7 +24,7 @@ public class RestTestBase extends TestBase {
     @BeforeClass
     public void auth() {
         RestAssured.useRelaxedHTTPSValidation();
-        token = authenticate("demo0", "%4UQ4aX@nMLq&Vsv#Vp@%v3%4yc9@WXj");
+        token = authenticate(LOGIN, PASSWORD); //("demo0", "%4UQ4aX@nMLq&Vsv#Vp@%v3%4yc9@WXj");
     }
 
     private Map<String, String> authenticate(String userName, String password) {

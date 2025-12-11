@@ -3,7 +3,7 @@ package dw.model.tables;
 import java.util.List;
 
 public enum Tables implements Table<Column> {
-    CRIMES(100, "users", CrimesColumns.values());
+    CRIMES(8100, "users", CrimesColumns.values());
 
     private final int id;
     private final String name;

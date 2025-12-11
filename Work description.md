@@ -31,5 +31,6 @@ Switched to Java 21. TODO to ask what Java is supported.
 25. Added options to Chromedriver not to show additional messages and not to propose password saving.
 26. Adding Lombok.
 27. Add Session model for api request session.
+28. Fix checkMaxValueForIntegerColumn to send correct request.
 
 
