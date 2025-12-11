@@ -25,6 +25,11 @@ Switched to Java 21. TODO to ask what Java is supported.
 21. Clean up aggregates after tests. Added two alternative versions 
 * a) we check all the aggregates during the test and uncheck all of them after the test.
 * b) we check only the required aggregate option during the test and uncheck it after the test.
-
+22. Add Owner to handle config.properties (login, password, base url). Fix logOnInActiveSession method.
+23. Add Table enums (tables and columns). used them in UI tests.
+24. Moved enums to separate package.
+25. Added options to Chromedriver not to show additional messages and not to propose password saving.
+26. Adding Lombok.
+27. Add Session model for api request session.
 
 

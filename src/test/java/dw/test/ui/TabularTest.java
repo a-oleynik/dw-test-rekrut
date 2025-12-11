@@ -1,9 +1,10 @@
 package dw.test.ui;
 
 import dw.UITestBase;
-import dw.pageobject.AggregateOption;
+import dw.enums.AggregateOption;
+import dw.model.tables.CrimesColumns;
 import dw.pageobject.LoginPage;
-import dw.pageobject.SortOption;
+import dw.enums.SortOption;
 import dw.pageobject.TabularViewPage;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -18,8 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TabularTest extends UITestBase {
 
     private TabularViewPage tabularViewPage;
-    private static final String LATITUDE_COLUMN = "Latitude";
-    private static final String SERIAL_NUMBER_COLUMN = "Serial number";
+    private static final String LATITUDE_COLUMN = CrimesColumns.LATITUDE.getTitle();
+    private static final String SERIAL_NUMBER_COLUMN = CrimesColumns.SERIAL_NUMBER.getTitle();
     private static final String ERROR_MESSAGE = "Aggregate max value for %s is different than displayed in tabular.";
     private String column;
     private AggregateOption aggregateOption = AggregateOption.MAX;

@@ -1,5 +1,7 @@
 package dw.pageobject;
 
+import dw.enums.AggregateOption;
+import dw.enums.SortOption;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 

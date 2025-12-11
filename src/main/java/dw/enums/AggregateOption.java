@@ -1,4 +1,4 @@
-package dw.pageobject;
+package dw.enums;
 
 public enum AggregateOption {
 

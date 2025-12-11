@@ -1,5 +1,6 @@
 package dw;
 
+import dw.model.Session;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -26,11 +27,12 @@ public class RestTestBase extends TestBase {
         token = authenticate("demo0", "%4UQ4aX@nMLq&Vsv#Vp@%v3%4yc9@WXj");
     }
 
-    private Map<String, String> authenticate(String userName, String userPwd) {
+    private Map<String, String> authenticate(String userName, String password) {
 
         Response post = of()
                 .contentType(ContentType.JSON)
-                .body("{user: \"" + userName + "\", password: \"" + userPwd + "\", overrideExistingSession: true}")
+                //.body("{user: \"" + userName + "\", password: \"" + password + "\", overrideExistingSession: true}")
+                .body(Session.builder().user(userName).password(password).overrideExistingSession(true).build())
                 .post("/api/v1/auth/app");
 
         post.prettyPrint();
