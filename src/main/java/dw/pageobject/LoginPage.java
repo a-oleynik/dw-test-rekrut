@@ -6,7 +6,7 @@ public class LoginPage extends AbstractPageObject {
 
     public static final String CSS_FIELD_USERNAME = "[data-testing-id='user-input']";
     public static final String CSS_FIELD_PASSWORD = "[data-testing-id='password-input']";
-    public static final String CSS_BUTTON_LOGIN = "[data-testing-id='login-button']";//"//div[@location='login']//button[@type='submit']/span";
+    public static final String CSS_BUTTON_LOGIN = "[data-testing-id='login-button']";
     public static final String TAG_ACTIVE_SESSION = "datawalk-session";
 
     public LoginPage typeUsername(String userLogin) {
