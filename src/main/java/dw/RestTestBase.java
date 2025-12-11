@@ -24,14 +24,13 @@ public class RestTestBase extends TestBase {
     @BeforeClass
     public void auth() {
         RestAssured.useRelaxedHTTPSValidation();
-        token = authenticate(LOGIN, PASSWORD); //("demo0", "%4UQ4aX@nMLq&Vsv#Vp@%v3%4yc9@WXj");
+        token = authenticate(LOGIN, PASSWORD);
     }
 
     private Map<String, String> authenticate(String userName, String password) {
 
         Response post = of()
                 .contentType(ContentType.JSON)
-                //.body("{user: \"" + userName + "\", password: \"" + password + "\", overrideExistingSession: true}")
                 .body(Session.builder().user(userName).password(password).overrideExistingSession(true).build())
                 .post("/api/v1/auth/app");
 

@@ -3,6 +3,8 @@ package dw.test.rest;
 import dw.RestTestBase;
 import dw.enums.AggregateOption;
 import dw.model.aggregate.*;
+import dw.model.aggregate.response.AggregateResponse;
+import dw.model.aggregate.response.AggregateValue;
 import dw.model.tables.CrimesColumns;
 import dw.model.tables.Tables;
 import io.restassured.http.ContentType;
@@ -58,7 +60,7 @@ public class TabularTest extends RestTestBase {
                                                                                 .base(contextBaseEntryMap)                                                                                .build()
                                                                 )
                                                                 .readOnly(false)
-                                                                .token(token.values().stream().findFirst().get())//"b7fea597-412d-41bf-9b68-cd701cc25fc7")
+                                                                .token(token.values().stream().findFirst().get())
                                                                 .build()
                                                 )
                                                 .key(String.valueOf(idOfCrimesTable))
@@ -75,16 +77,17 @@ public class TabularTest extends RestTestBase {
                 .body(aggregateRequest) // set body
                 .put("/api/v1/entity/aggregate") // set endpoint
                 .then()
-                //.statusCode(200)
+                .statusCode(200)
                 .extract().response();
 
         response.prettyPrint();
-        //AggregateResponse aggregateResponse = response.body().as(AggregateResponse.class);
+        AggregateResponse aggregateResponse = response.body().as(AggregateResponse.class);
+        AggregateValue aggregateValue = aggregateResponse.getFirstAggregateResult().getFirstAggregateValue();
 
-        String actualValue = "0";  // get MAX value for given response for column, response.jsonPath()....
+        int actualValue = (int)aggregateValue.getValue();// get MAX value for given response for column, response.jsonPath()....
 
         assertThat(actualValue)
                 .describedAs("Aggregate max value for: ABC is different than displayed in tabular.")
-                .isEqualTo("22");
+                .isEqualTo(69);
     }
 }

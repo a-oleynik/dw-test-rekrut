@@ -32,5 +32,6 @@ Switched to Java 21. TODO to ask what Java is supported.
 26. Adding Lombok.
 27. Add Session model for api request session.
 28. Fix checkMaxValueForIntegerColumn to send correct request.
+29. Implement response parsing for checkMaxValueForIntegerColumn test.
 
 
