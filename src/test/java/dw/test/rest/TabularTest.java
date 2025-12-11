@@ -5,6 +5,7 @@ import dw.enums.AggregateOption;
 import dw.model.aggregate.*;
 import dw.model.aggregate.response.AggregateResponse;
 import dw.model.aggregate.response.AggregateValue;
+import dw.model.tables.Column;
 import dw.model.tables.CrimesColumns;
 import dw.model.tables.Tables;
 import io.restassured.http.ContentType;
@@ -14,11 +15,13 @@ import org.testng.annotations.Test;
 import java.util.List;
 import java.util.Map;
 
+import static dw.test.ui.TabularTest.ERROR_MESSAGE;
+import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TabularTest extends RestTestBase {
-
-    int idOfCrimeColumnID = CrimesColumns.ID.getId(); // column ID = 9106
+    Column column = CrimesColumns.ID; // column ID
+    int idOfCrimeColumnID = column.getId(); // column ID = 9106
     int idOfCrimesTable = Tables.CRIMES.getId(); // Table Crimes id 8100
 
     @Test
@@ -57,7 +60,7 @@ public class TabularTest extends RestTestBase {
                                                         InnerContext.builder()
                                                                 .context(
                                                                         InnerContextLevel.builder()
-                                                                                .base(contextBaseEntryMap)                                                                                .build()
+                                                                                .base(contextBaseEntryMap).build()
                                                                 )
                                                                 .readOnly(false)
                                                                 .token(token.values().stream().findFirst().get())
@@ -84,10 +87,10 @@ public class TabularTest extends RestTestBase {
         AggregateResponse aggregateResponse = response.body().as(AggregateResponse.class);
         AggregateValue aggregateValue = aggregateResponse.getFirstAggregateResult().getFirstAggregateValue();
 
-        int actualValue = (int)aggregateValue.getValue();// get MAX value for given response for column, response.jsonPath()....
+        int actualValue = ((Number) aggregateValue.getValue()).intValue();// get MAX value for given response for column, response.jsonPath()....
 
         assertThat(actualValue)
-                .describedAs("Aggregate max value for: ABC is different than displayed in tabular.")
+                .describedAs(format(ERROR_MESSAGE, column.getTitle()))
                 .isEqualTo(69);
     }
 }

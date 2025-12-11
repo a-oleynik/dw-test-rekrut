@@ -21,7 +21,7 @@ public class TabularTest extends UITestBase {
     private TabularViewPage tabularViewPage;
     private static final String LATITUDE_COLUMN = CrimesColumns.LATITUDE.getTitle();
     private static final String SERIAL_NUMBER_COLUMN = CrimesColumns.SERIAL_NUMBER.getTitle();
-    private static final String ERROR_MESSAGE = "Aggregate max value for %s is different than displayed in tabular.";
+    public static final String ERROR_MESSAGE = "Aggregate max value for %s is different than displayed in tabular.";
     private String column;
     private AggregateOption aggregateOption = AggregateOption.MAX;
 
@@ -35,7 +35,7 @@ public class TabularTest extends UITestBase {
         column = LATITUDE_COLUMN;
         String maxValueForColumnInAggregates = tabularViewPage.getAggregateValueForColumn(column, aggregateOption);
         assertThat(maxValueForColumnInAggregates)
-                .describedAs(format(ERROR_MESSAGE, LATITUDE_COLUMN))
+                .describedAs(format(ERROR_MESSAGE, column))
                 .isEqualTo("59.38");
     }
 
