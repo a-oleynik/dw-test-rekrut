@@ -38,8 +38,12 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.version}</version>
                 <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <!--TODO: update tests to support parallel execution. Add more users, Add THreadLocal for webdriver
                     <parallel>classes</parallel>
-                    <threadCount>3</threadCount>
+                    <threadCount>3</threadCount>-->
                 </configuration>
             </plugin>
         </plugins>
