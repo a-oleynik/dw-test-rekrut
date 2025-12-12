@@ -38,5 +38,6 @@ Switched to Java 21. TODO to ask what Java is supported.
 32. Add screenshot if test failed. Add folder constants. 
 33. Add DateTimeUtils and WebdriverMethods. 
 34. Removed isScrolledLeftToEnd as it didn't work with awaitility in threads.
+35. Reorganize enums. Remove obsolete CustomWait
 
 

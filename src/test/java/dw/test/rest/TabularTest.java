@@ -1,7 +1,7 @@
 package dw.test.rest;
 
 import dw.RestTestBase;
-import dw.enums.AggregateOption;
+import dw.pageobject.enums.AggregateOption;
 import dw.model.aggregate.*;
 import dw.model.aggregate.response.AggregateResponse;
 import dw.model.aggregate.response.AggregateValue;

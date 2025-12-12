@@ -1,10 +1,10 @@
 package dw.test.ui;
 
 import dw.UITestBase;
-import dw.enums.AggregateOption;
+import dw.pageobject.enums.AggregateOption;
 import dw.model.tables.CrimesColumns;
 import dw.pageobject.LoginPage;
-import dw.enums.SortOption;
+import dw.pageobject.enums.SortOption;
 import dw.pageobject.TabularViewPage;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;

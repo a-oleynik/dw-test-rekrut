@@ -1,7 +1,7 @@
 package dw.pageobject;
 
-import dw.enums.AggregateOption;
-import dw.enums.SortOption;
+import dw.pageobject.enums.AggregateOption;
+import dw.pageobject.enums.SortOption;
 import dw.framework.webdriver.WebdriverManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
@@ -58,7 +58,7 @@ public class TabularViewPage extends AbstractPageObject {
                 break;
             } catch (StaleElementReferenceException e) {
                 x++;
-                CustomWait.staticWait(0.5);
+                //TODO: check if we need additional wait here when we use the method
             }
         }
     }
@@ -89,7 +89,7 @@ public class TabularViewPage extends AbstractPageObject {
 
     public TabularViewPage selectAllRowsOnCurrentPage() {
         click(TABULAR_PAGE + "//span[@ref='cbSelectAll']");
-        CustomWait.staticWait(0.5);
+        //TODO: check if we need additional wait here when we use the method
         return this;
     }
 

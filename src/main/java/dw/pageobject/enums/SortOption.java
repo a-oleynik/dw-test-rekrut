@@ -1,4 +1,4 @@
-package dw.enums;
+package dw.pageobject.enums;
 
 import java.util.Arrays;
 import java.util.Optional;
