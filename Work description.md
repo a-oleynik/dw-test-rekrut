@@ -34,5 +34,9 @@ Switched to Java 21. TODO to ask what Java is supported.
 28. Fix checkMaxValueForIntegerColumn to send correct request.
 29. Implement response parsing for checkMaxValueForIntegerColumn test.
 30. Added skeleton of test classes, methods and utils to test with XLSX export.
+31. Add WebdriverManager to handle parallel Webdriver threads. 
+32. Add screenshot if test failed. Add folder constants. 
+33. Add DateTimeUtils and WebdriverMethods. 
+34. Removed isScrolledLeftToEnd as it didn't work with awaitility in threads.
 
 

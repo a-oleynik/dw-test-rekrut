@@ -1,0 +1,19 @@
+package dw.framework.webdriver;
+
+import org.openqa.selenium.WebDriver;
+
+public class WebdriverManager {
+    private static final ThreadLocal<WebDriver> webDriver = new ThreadLocal<>();
+
+    public static WebDriver getDriver() {
+        return webDriver.get();
+    }
+
+    public static void setWebDriver(WebDriver driver) {
+        webDriver.set(driver);
+    }
+
+    public static void removeDriver() {
+        webDriver.remove();
+    }
+}

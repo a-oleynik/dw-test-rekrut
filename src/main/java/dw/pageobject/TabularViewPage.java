@@ -2,6 +2,7 @@ package dw.pageobject;
 
 import dw.enums.AggregateOption;
 import dw.enums.SortOption;
+import dw.framework.webdriver.WebdriverManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 
@@ -77,7 +78,7 @@ public class TabularViewPage extends AbstractPageObject {
     }
 
     public TabularViewPage selectRow(int... rows) {
-        Actions act = new Actions(driver);
+        Actions act = new Actions(WebdriverManager.getDriver());
         act.keyDown(Keys.LEFT_CONTROL).build().perform();
         for (int row : rows) {
             jsClick(TABULAR_PAGE + "//div[@class='ag-pinned-left-cols-container']/div[@row=" + (row - 1) + "]//span[@class='ag-selection-checkbox']/img[not(contains(@class,'hidden'))]");
@@ -175,7 +176,7 @@ public class TabularViewPage extends AbstractPageObject {
 
     public TabularViewPage showMenuOnRow(int... rows) {
         // select object
-        Actions act = new Actions(driver);
+        Actions act = new Actions(WebdriverManager.getDriver());
         act.keyDown(Keys.LEFT_CONTROL).build().perform();
         for (int row : rows) {
             jsClick(TABULAR_PAGE + "//div[@class='ag-pinned-left-cols-container']/div[@row=" + (row - 1) + "]//span[@class='ag-selection-checkbox']/img[not(contains(@class,'hidden'))]");
@@ -208,7 +209,7 @@ public class TabularViewPage extends AbstractPageObject {
     public void jsClick(String xpathExpression) {
         xpathExpression = xpathExpression.replaceAll("'", "\"");
 
-        JavascriptExecutor jsDriver = (JavascriptExecutor) this.driver;
+        JavascriptExecutor jsDriver = (JavascriptExecutor) WebdriverManager.getDriver();
         jsDriver.executeScript("document.evaluate('" + xpathExpression + "',"
                 + "document,null,XPathResult.ANY_TYPE,null).iterateNext().click()");
     }

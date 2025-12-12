@@ -39,7 +39,7 @@ public class TabularTest extends UITestBase {
                 .isEqualTo("59.38");
     }
 
-    @Test(/*dependsOnMethods = "checkMaxValueForIntegerColumn"*/)
+    @Test(/*dependsOnMethods = "checkMaxValueForIntegerColumn"*/) // Dependencies between tests is a bad practice. Uncomment if you still need this dependency
     public void compareMaxWithSortedColumn() {
         column = SERIAL_NUMBER_COLUMN;
         String maxValueForColumnInAggregates = tabularViewPage.getAggregateValueForColumn(column, aggregateOption);

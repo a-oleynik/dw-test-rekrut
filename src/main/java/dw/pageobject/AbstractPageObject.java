@@ -1,6 +1,7 @@
 package dw.pageobject;
 
 import dw.UITestBase;
+import dw.framework.webdriver.WebdriverManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.*;
@@ -9,7 +10,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static dw.framework.Utils.sleep;
+import static dw.framework.utils.Utils.sleep;
 import static java.lang.String.format;
 import static org.awaitility.Awaitility.*;
 
@@ -23,12 +24,12 @@ public class AbstractPageObject extends UITestBase {
     }
 
     public void actionClick(WebElement element) {
-        Actions act = new Actions(driver);
+        Actions act = new Actions(WebdriverManager.getDriver());
         act.click(element).build().perform();
     }
 
     public void actionFillInput(WebElement element, String text) {
-        Actions act = new Actions(driver);
+        Actions act = new Actions(WebdriverManager.getDriver());
         act.sendKeys(element, text).build().perform();
     }
 
@@ -37,11 +38,11 @@ public class AbstractPageObject extends UITestBase {
     }
 
     public WebElement findElementBy(By by) {
-        return driver.findElement(by);
+        return WebdriverManager.getDriver().findElement(by);
     }
 
     public List<WebElement> findElementsBy(By by) {
-        return driver.findElements(by);
+        return WebdriverManager.getDriver().findElements(by);
     }
 
     public WebElement findElementBy(By by, int waitSec) {
@@ -60,8 +61,8 @@ public class AbstractPageObject extends UITestBase {
 
     // Method to scroll left until element present and visible
     public WebElement scrollLeftUntilElementPresent(By locator, String scrollBarXpath) {
+        WebDriver driver = WebdriverManager.getDriver();
         AtomicReference<WebElement> result = new AtomicReference<>();
-
         try {
             await()
                     .pollInterval(Duration.ofMillis(300))
@@ -74,12 +75,7 @@ public class AbstractPageObject extends UITestBase {
                             return true;
                         }
 
-                        // if we scrolled to the end we can return false here
-                        if (isScrolledLeftToEnd(scrollBarXpath)) {
-                            return false;
-                        }
-
-                        scrollLeftElementByXpath(scrollBarXpath);
+                        scrollLeftElementByXpath(driver, scrollBarXpath);
                         return false;
                     });
 
@@ -98,8 +94,9 @@ public class AbstractPageObject extends UITestBase {
 
     // Another variant to scroll left until element present and visible
     public WebElement scrollLeftUntilElementPresentV2(By locator, String scrollBarXpath, int maxScrolls) {
+        WebDriver driver = WebdriverManager.getDriver();
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebDriverWait wait = new WebDriverWait(WebdriverManager.getDriver(), Duration.ofSeconds(5));
 
         for (int i = 0; i < maxScrolls; i++) {
 
@@ -116,7 +113,7 @@ public class AbstractPageObject extends UITestBase {
             }
 
             // 3. Element not found yet → scroll further left
-            scrollLeftElementByXpath(scrollBarXpath);
+            scrollLeftElementByXpath(driver, scrollBarXpath);
             sleep(300); // small pause to let content load (or use a smarter wait)
         }
 
@@ -124,23 +121,7 @@ public class AbstractPageObject extends UITestBase {
                 "Element " + locator + " not found after scrolling " + maxScrolls + " times");
     }
 
-
-
-    public boolean isScrolledLeftToEnd(String scrollBarXpath) {
-        WebElement scrollBar = findElementByXpath(scrollBarXpath);
-        Long maxScrollLeft = (Long) ((JavascriptExecutor) driver)
-                .executeScript("return arguments[0].scrollWidth - arguments[0].clientWidth;", scrollBar);
-
-        Long currentScrollLeft = (Long) ((JavascriptExecutor) driver)
-                .executeScript("return arguments[0].scrollLeft;", scrollBar);
-
-        if (currentScrollLeft >= maxScrollLeft) {
-            return true;
-        }
-        return false;
-    }
-
-    public void scrollLeftElementByXpath(String XPath) {
+    public void scrollLeftElementByXpath(WebDriver driver, String XPath) {
         String script = format("var el = document.evaluate(\"%s\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;\n" +
                 "el.scrollLeft += 200;", XPath);
         JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -174,7 +155,7 @@ public class AbstractPageObject extends UITestBase {
     }
 
     public boolean isElementDisplayed(By locator, int maxWaitSec) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(maxWaitSec));
+        WebDriverWait wait = new WebDriverWait(WebdriverManager.getDriver(), Duration.ofSeconds(maxWaitSec));
         try {
             wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
         } catch (TimeoutException e) {
@@ -184,7 +165,7 @@ public class AbstractPageObject extends UITestBase {
     }
 
     public boolean isElementDisplayed(String xpath, int maxWaitSec) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(maxWaitSec));
+        WebDriverWait wait = new WebDriverWait(WebdriverManager.getDriver(), Duration.ofSeconds(maxWaitSec));
         try {
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
         } catch (TimeoutException e) {
@@ -223,7 +204,7 @@ public class AbstractPageObject extends UITestBase {
     public void fillInput(String xpath, String text) {
         WebElement element = findElementByXpath(xpath);
         element.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));     // clear input
-        Actions actions = new Actions(driver);
+        Actions actions = new Actions(WebdriverManager.getDriver());
         actions.click(element)
                 .sendKeys(element, text)
                 .build().perform();
@@ -231,7 +212,7 @@ public class AbstractPageObject extends UITestBase {
 
 
     public void openUrl(String url) {
-        driver.get(url);
+        WebdriverManager.getDriver().get(url);
     }
 
 
@@ -263,7 +244,7 @@ public class AbstractPageObject extends UITestBase {
 
     public boolean waitForElementDisplayed(By by, int maxSeconds) {
         try {
-            Wait<WebDriver> wait = new FluentWait<>(driver)
+            Wait<WebDriver> wait = new FluentWait<>(WebdriverManager.getDriver())
                     .withTimeout(Duration.ofSeconds(maxSeconds))
                     .pollingEvery(Duration.ofMillis(200))
                     .ignoring(NoSuchElementException.class);
@@ -276,7 +257,7 @@ public class AbstractPageObject extends UITestBase {
 
     public boolean waitForElementNotDisplayed(By by, int maxSeconds) {
         try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(maxSeconds));
+            WebDriverWait wait = new WebDriverWait(WebdriverManager.getDriver(), Duration.ofSeconds(maxSeconds));
             wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
             return true;
         } catch (TimeoutException e) {
